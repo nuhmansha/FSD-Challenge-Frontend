@@ -1,15 +1,14 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-import './App.css'
+import "./App.css";
+import AppRouter from "./Routes/AppRouter";
 
 function App() {
-  
-
   return (
-    <>
-     <div className="bg-red-600">hai</div>
-    </>
-  )
+    <div className="App">
+      <AppRouter />
+    </div>
+  );
 }
 
-export default App
+export default App;
