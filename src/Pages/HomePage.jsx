@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import TaskBoard from '../Components/Task/TaskBoard';
 
 const HomePage = () => {
   return (
-    <div>HomePage</div>
-  )
-}
+    <div className="container mx-auto mt-10">
+      <TaskBoard />
+    </div>
+  );
+};
 
-export default HomePage
+export default HomePage;

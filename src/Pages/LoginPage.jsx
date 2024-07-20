@@ -1,12 +1,13 @@
-import React from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { Link, useNavigate } from 'react-router-dom';
-import axiosInstance from '../Instance/axiosInstance';
+import React from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { Link, useNavigate } from "react-router-dom";
+import axiosInstance from "../Instance/axiosInstance";
+import { GoogleLogin } from "@react-oauth/google";
 
 const validationSchema = Yup.object({
-  email: Yup.string().email('Invalid email format').required('Email is required'),
-  password: Yup.string().min(8, 'Password must be at least 8 characters long').required('Password is required'),
+  email: Yup.string().email("Invalid email format").required("Email is required"),
+  password: Yup.string().min(8, "Password must be at least 8 characters long").required("Password is required"),
 });
 
 const LoginPage = () => {
@@ -16,8 +17,8 @@ const LoginPage = () => {
     try {
       const response = await axiosInstance.post("/login", values);
       if (response.data.token) {
+        console.log("JWT Token:", response.data.token); 
         localStorage.setItem("token", response.data.token);
-        console.log("Token stored in localStorage:", response.data.token);
         navigate("/"); // Redirect to home page after successful login
       }
     } catch (error) {
@@ -25,15 +26,13 @@ const LoginPage = () => {
         setErrors({ server: error.response.data.message });
       }
       setSubmitting(false);
-    } finally {
-      setSubmitting(false);
     }
   };
 
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
     validationSchema,
     onSubmit: (values, { setSubmitting, setErrors }) => {
@@ -41,9 +40,23 @@ const LoginPage = () => {
     },
   });
 
-  const handleGoogleLogin = () => {
-    // Implement Google login logic here
-    console.log("Google login clicked");
+  
+  const handleGoogleLoginSuccess = (response) => {
+    const { credential } = response;
+    console.log(credential,'cr');
+    axiosInstance
+      .post("/google-login", { idToken: credential })
+      .then((response) => {
+        console.log("Google Signup successful:", response.data);
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("There was an error with Google signup!", error);
+      });
+  };
+
+  const handleGoogleLoginError = (error) => {
+    console.error("Google login failed:", error);
   };
 
   return (
@@ -96,12 +109,10 @@ const LoginPage = () => {
         </Link>
       </p>
       <div className="flex justify-center mt-4">
-        <button
-          onClick={handleGoogleLogin}
-          className="bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-700 text-sm"
-        >
-          Login with Google
-        </button>
+        <GoogleLogin
+          onSuccess={handleGoogleLoginSuccess}
+          onError={handleGoogleLoginError}
+        />
       </div>
     </div>
   );
