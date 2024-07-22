@@ -4,7 +4,8 @@ import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import axiosInstance from "../Instance/axiosInstance";
 import { GoogleLogin } from "@react-oauth/google";
-import { useAuth } from "../Context/AuthContext"; // Import useAuth
+import { useAuth } from "../Context/AuthContext";
+import { PiNotepadBold } from "react-icons/pi"; // Ensure you have the correct icon import
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -16,7 +17,7 @@ const validationSchema = Yup.object({
 });
 
 const LoginPage = () => {
-  const { login } = useAuth(); // Get the login function from AuthContext
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (values, setSubmitting, setErrors) => {
@@ -67,59 +68,83 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl border border-blue-500">
-      <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-      <form onSubmit={formik.handleSubmit} className="space-y-4">
-        <div>
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.email}
-            className="w-full p-2 border rounded"
-          />
-          {formik.touched.email && formik.errors.email ? (
-            <div className="text-red-500 text-sm">{formik.errors.email}</div>
-          ) : null}
+    <div>
+      <nav className="bg-blue-700 p-4 flex justify-between items-center">
+        <div className="flex items-center space-x-2">
+          <PiNotepadBold className="text-white text-2xl" />
         </div>
         <div>
-          <input
-            name="password"
-            type="password"
-            placeholder="Password"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.password}
-            className="w-full p-2 border rounded"
-          />
-          {formik.touched.password && formik.errors.password ? (
-            <div className="text-red-500 text-sm">{formik.errors.password}</div>
-          ) : null}
+          <Link
+            to="/login"
+            className="text-white px-4 py-2 rounded mr-2 hover:bg-blue-600"
+          >
+            Login
+          </Link>
+          <Link
+            to="/signup"
+            className="text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Signup
+          </Link>
         </div>
-        {formik.errors.server && (
-          <div className="text-red-500 text-sm">{formik.errors.server}</div>
-        )}
-        <button
-          type="submit"
-          className="w-full bg-blue-700 text-white p-2 rounded hover:bg-blue-700"
-          disabled={formik.isSubmitting}
-        >
-          Login
-        </button>
-      </form>
-      <p className="mt-4 text-center">
-        Don't have an account?{" "}
-        <Link to="/signup" className="text-blue-500">
-          Sign up
-        </Link>
-      </p>
-      <div className="flex justify-center mt-4">
-        <GoogleLogin
-          onSuccess={handleGoogleLoginSuccess}
-          onError={handleGoogleLoginError}
-        />
+      </nav>
+
+      <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-xl border border-blue-500">
+        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+        <form onSubmit={formik.handleSubmit} className="space-y-4">
+          <div>
+            <input
+              name="email"
+              type="email"
+              placeholder="Email"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.email}
+              className="w-full p-2 border rounded"
+            />
+            {formik.touched.email && formik.errors.email ? (
+              <div className="text-red-500 text-sm">{formik.errors.email}</div>
+            ) : null}
+          </div>
+          <div>
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.password}
+              className="w-full p-2 border rounded"
+            />
+            {formik.touched.password && formik.errors.password ? (
+              <div className="text-red-500 text-sm">
+                {formik.errors.password}
+              </div>
+            ) : null}
+          </div>
+          {formik.errors.server && (
+            <div className="text-red-500 text-sm">{formik.errors.server}</div>
+          )}
+          <button
+            type="submit"
+            className="w-full bg-blue-700 text-white p-2 rounded hover:bg-blue-800"
+            disabled={formik.isSubmitting}
+          >
+            Login
+          </button>
+        </form>
+        <p className="mt-4 text-center">
+          Don't have an account?{" "}
+          <Link to="/signup" className="text-blue-500">
+            Sign up
+          </Link>
+        </p>
+        <div className="flex justify-center mt-4">
+          <GoogleLogin
+            onSuccess={handleGoogleLoginSuccess}
+            onError={handleGoogleLoginError}
+          />
+        </div>
       </div>
     </div>
   );
