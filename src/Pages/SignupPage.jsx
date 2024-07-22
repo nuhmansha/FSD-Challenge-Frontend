@@ -50,7 +50,7 @@ const SignupPage = () => {
     axiosInstance
       .post("/google-signup", { idToken: credential })
       .then((response) => {
-        console.log("Google Signup successful:", response.data);
+        console.log("Google Signup successful:123", response.data);
         navigate("/");
       })
       .catch((error) => {
