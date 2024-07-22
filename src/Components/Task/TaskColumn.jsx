@@ -1,12 +1,28 @@
-import React from 'react';
-import TaskCard from './TaskCard';
+import React from "react";
+import { Draggable } from "react-beautiful-dnd";
+import TaskCard from "./TaskCard";
 
-const TaskColumn = ({ status, tasks }) => {
+const TaskColumn = ({ title, tasks, onTaskUpdated, onTaskDeleted }) => {
   return (
-    <div className="w-1/3 bg-gray-200 p-4 rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">{status}</h2>
-      {tasks.map(task => (
-        <TaskCard key={task.id} task={task} />
+    <div className="bg-white p-4 rounded-md shadow-md">
+      <h2 className="text-xl font-bold mb-2">{title}</h2>
+      {tasks.map((task, index) => (
+        <Draggable key={task._id} draggableId={task._id} index={index}>
+          {(provided) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              className="mb-2"
+            >
+              <TaskCard
+                task={task}
+                onTaskUpdated={onTaskUpdated}
+                onTaskDeleted={onTaskDeleted}
+              />
+            </div>
+          )}
+        </Draggable>
       ))}
     </div>
   );
